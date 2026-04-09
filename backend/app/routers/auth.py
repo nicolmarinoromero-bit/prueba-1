@@ -1,11 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+import secrets
 import random
 import string
 from ..database import get_db
 from ..models import Cliente, Usuario, PasswordResetToken, RolUsuario
-from ..schemas import LoginRequest, RegisterClienteRequest, ForgotPasswordRequest, VerifyCodeRequest, ResetPasswordRequest, TokenResponse
+from ..schemas import (
+    LoginRequest, RegisterClienteRequest, ForgotPasswordRequest,
+    VerifyCodeRequest, ResetPasswordRequest, TokenResponse
+)
 from ..auth import verify_password, get_password_hash, create_access_token
 from ..email_utils import send_reset_code_email
 from ..config import settings
@@ -107,8 +111,9 @@ async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(
 
 @router.post("/verify-code")
 def verify_code(request: VerifyCodeRequest, db: Session = Depends(get_db)):
+    email = request.email
     token_entry = db.query(PasswordResetToken).filter(
-        ((PasswordResetToken.email_usuario == request.email) | (PasswordResetToken.email_cliente == request.email)),
+        ((PasswordResetToken.email_usuario == email) | (PasswordResetToken.email_cliente == email)),
         PasswordResetToken.code == request.code,
         PasswordResetToken.used == False,
         PasswordResetToken.expires_at > datetime.utcnow()
@@ -131,16 +136,20 @@ def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db))
     if not token_entry:
         raise HTTPException(status_code=400, detail="Código inválido o expirado")
     
+    hashed_password = get_password_hash(request.new_password)
+    
     if token_entry.email_cliente:
         cliente = db.query(Cliente).filter(Cliente.correo_cliente == token_entry.email_cliente).first()
-        if cliente:
-            cliente.contraseña_cliente = get_password_hash(request.new_password)
+        if not cliente:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        cliente.contraseña_cliente = hashed_password
     elif token_entry.email_usuario:
         usuario = db.query(Usuario).filter(Usuario.correo_usuario == token_entry.email_usuario).first()
-        if usuario:
-            usuario.contraseña_usuario = get_password_hash(request.new_password)
+        if not usuario:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        usuario.contraseña_usuario = hashed_password
     else:
-        raise HTTPException(status_code=400, detail="Usuario no encontrado")
+        raise HTTPException(status_code=400, detail="No se encontró el usuario asociado")
     
     token_entry.used = True
     db.commit()

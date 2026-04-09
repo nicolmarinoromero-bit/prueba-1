@@ -1,0 +1,198 @@
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #000;
+    color: white;
+}
+header {
+    background: #caa24d;
+    padding: 10px 40px;
+}
+.perfil-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+.perfil-link img {
+    width: 30px;
+    height: 30px;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+nav a, .nav-right a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.admin-container {
+    padding: 30px;
+    background-size: 120%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.grid-top {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+.card {
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+    position: relative;
+}
+.card button {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+.big {
+    font-size: 24px;
+    font-weight: bold;
+}
+.inventario {
+    margin-top: 20px;
+}
+.grid-inv {
+    display: flex;
+    gap: 15px;
+}
+.inv-card {
+    background: #c9a24a;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+.side {
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+.tech {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.tech img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+}
+.tech button {
+    margin-left: auto;
+    background: #c9a24a;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+.citas-linea {
+    margin-top: 10px;
+}
+.cita-linea {
+    display: flex;
+    gap: 10px;
+    background: black;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+.hora {
+    color: #c9a24a;
+    font-weight: bold;
+}
+.ver-mas {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px;
+    background: #c9a24a;
+    color: black;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.card-img-box {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-img-box img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+.card-text h3 {
+    margin: 0;
+    font-size: 16px;
+}
+.card-text .big {
+    margin: 5px 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+.card-text span {
+    font-size: 13px;
+    color: #aaa;
+}
+.btn-arrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+}
+.btn-arrow-inv {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+.btn-ver {
+    margin-left: auto;
+    background: #c9a24a;
+    color: black;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}

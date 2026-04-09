@@ -10,12 +10,6 @@ app = FastAPI(title="Neodomus API", version="1.0")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@app.middleware("http")
-async def log_requests(request, call_next):
-    logger.info(f"{request.method} {request.url}")
-    response = await call_next(request)
-    return response
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -23,6 +17,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    logger.info(f"{request.method} {request.url}")
+    response = await call_next(request)
+    return response
 
 app.include_router(auth_router)
 app.include_router(clientes_router)

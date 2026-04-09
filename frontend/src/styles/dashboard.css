@@ -1,0 +1,111 @@
+.dashboard-container {
+    flex: 1;
+    padding: 20px;
+}
+
+.dashboard-section {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    flex: 1;
+    width: 100%;
+}
+
+.dashboard-header {
+    background: rgba(0, 0, 0, 0.6);
+    border: 5px solid #dcdcdc;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.dashboard-header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.role-badge {
+    display: inline-block;
+    background: #d3ac4d;
+    color: #080807;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 5px solid #dcdcdc;
+    border-radius: 20px;
+    padding: 1.5rem;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    opacity: 0.9;
+}
+
+.card h3 {
+    color: #d3ac4d;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #d3ac4d;
+    padding-bottom: 0.5rem;
+}
+
+.card ul {
+    list-style: none;
+}
+
+.card li {
+    margin-bottom: 0.8rem;
+}
+
+.card li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.card li a:hover {
+    color: #d3ac4d;
+    text-decoration: underline;
+}
+
+.btn-logout {
+    background-color: #d3ac4d;
+    color: #080807;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.3s;
+    float: right;
+}
+
+.btn-logout:hover {
+    opacity: 0.8;
+}
+
+.welcome-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
