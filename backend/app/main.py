@@ -4,6 +4,7 @@ import logging
 from .routers.auth import router as auth_router
 from .routers.clientes import router as clientes_router
 from .routers.usuarios import router as usuarios_router
+from .routers.productos import router as productos_router
 
 app = FastAPI(title="Neodomus API", version="1.0")
 
@@ -27,6 +28,7 @@ async def log_requests(request, call_next):
 app.include_router(auth_router)
 app.include_router(clientes_router)
 app.include_router(usuarios_router)
+app.include_router(productos_router)
 
 @app.get("/")
 def root():

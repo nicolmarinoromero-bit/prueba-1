@@ -48,3 +48,15 @@ class PasswordResetToken(Base):
     created_at = Column(DateTime, server_default=func.now())
     expires_at = Column(DateTime, nullable=False)
     used = Column(Boolean, default=False)
+
+class Producto(Base):
+    __tablename__ = "productos"
+    id_producto = Column(Integer, primary_key=True)
+    nombre_producto = Column(String(100))
+    referencia_producto = Column(String(50), unique=True)
+    id_proveedor_pr = Column(Integer, ForeignKey("proveedores.id_proveedor"))
+    precio_compra_producto = Column(Integer)
+    precio_venta_producto = Column(Integer)
+    fecha_registro_producto = Column(DateTime)
+    imagen_url = Column(String(255), nullable=True)
+    

@@ -1,8 +1,12 @@
 import footerImage from '@assets/images/FOOTER.jpeg';
 
-const Footer = () => {
+interface FooterProps {
+  compact?: boolean;
+}
+
+const Footer = ({ compact = false }: FooterProps) => {
   return (
-    <footer>
+    <footer className={compact ? 'footer-compact' : ''}>
       <div className="footer-top">
         <div className="footer-item left">
           <p>📞 +57 3150548392 | +57 3225681611</p>

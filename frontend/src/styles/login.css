@@ -16,7 +16,7 @@
     border-radius: 20px;
     border: 5px solid #dcdcdc;
     width: 100%;
-    max-width: 320px;
+    max-width: 350px;
     text-align: center;
 }
 .login-form h2 {
@@ -65,4 +65,51 @@
     color: #ff6b6b;
     margin-bottom: 15px;
     font-size: 13px;
+}
+.success {
+    color: #6bff6b;
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+/* Cuando solo hay un enlace (centrado) */
+.links.single-link {
+    justify-content: center;
+}
+/* Título del paso de código */
+.otp-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+    text-align: center;
+}
+
+/* Estilos para los 6 cuadros de código OTP */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.otp-input {
+    width: 50px;
+    height: 55px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    background: white;
+    border: 2px solid #dcdcdc;
+    border-radius: 15px;
+    transition: 0.2s;
+    outline: none;
+}
+
+.otp-input:focus {
+    border-color: #d3ac4d;
+    box-shadow: 0 0 5px rgba(211, 172, 77, 0.5);
+}
+
+.otp-input:disabled {
+    background: #eee;
+    cursor: not-allowed;
 }

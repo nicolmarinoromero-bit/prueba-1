@@ -32,3 +32,10 @@ class TokenResponse(BaseModel):
     token_type: str
     rol: Optional[str] = None
     nombre: Optional[str] = None
+
+class ProductoResponse(BaseModel):
+    id_producto: int
+    nombre_producto: str
+    referencia_producto: str
+    precio_venta_producto: float
+    imagen_url: Optional[str] = None

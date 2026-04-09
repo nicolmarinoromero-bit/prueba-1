@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '@services/api';
 import NavbarLanding from '@components/layout/NavbarLanding';
 import Footer from '@components/layout/Footer';
+import '../../styles/login.css';
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
