@@ -1,0 +1,66 @@
+# Entornos virtuales de Python
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+
+# Archivos de configuración local
+.env
+.env.local
+.env.*.local
+
+# Bases de datos locales
+*.db
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Backend - dependencias y archivos generados
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/.env.local
+
+# Frontend - node_modules y builds
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos de editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de cobertura de pruebas
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Archivos de migración (si usas Alembic)
+alembic/versions/*.pyc
+
+# Archivos temporales
+*.tmp
+*.temp
