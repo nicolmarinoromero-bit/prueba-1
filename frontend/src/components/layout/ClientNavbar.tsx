@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import logo from '@assets/images/Logo.jpg';
 import helpIcon from '@assets/images/Icono.png';
+import perfilIcon from '@assets/images/perfil.png';  // importa la imagen
+import '../../styles/navbarc.css';
 
 const ClientNavbar = () => {
   const { logout } = useAuth();
@@ -33,7 +35,7 @@ const ClientNavbar = () => {
         <div className="nav-right">
           <Link to="/perfil" className="perfil-link">
             <span>Mi perfil</span>
-            <img src="/src/assets/images/perfil.png" alt="perfil" />
+            <img src={perfilIcon} alt="perfil" />
           </Link>
           <button onClick={handleLogout} className="btn-logout">Cerrar sesión</button>
         </div>

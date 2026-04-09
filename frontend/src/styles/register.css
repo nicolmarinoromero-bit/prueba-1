@@ -87,3 +87,7 @@
         padding: 20px;
     }
 }
+/* Cuando solo hay un enlace (centrado) */
+.links.single-link {
+    justify-content: center;
+}
