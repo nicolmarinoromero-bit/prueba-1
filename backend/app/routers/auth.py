@@ -35,6 +35,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.correo_usuario == request.correo).first()
     if usuario and verify_password(request.contraseña, usuario.contraseña_usuario):
         rol = db.query(RolUsuario).filter(RolUsuario.id_rol == usuario.id_rol_u).first()
+        rol_nombre = rol.nombre_rol if rol else "tecnico"
         token = create_access_token({
             "sub": usuario.correo_usuario,
             "tipo": "usuario",
@@ -44,7 +45,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         return TokenResponse(
             access_token=token,
             token_type="bearer",
-            rol=rol.nombre_rol if rol else "usuario",
+            rol=rol_nombre,
             nombre=f"{usuario.nombre_usuario} {usuario.apellido_usuario}"
         )
     

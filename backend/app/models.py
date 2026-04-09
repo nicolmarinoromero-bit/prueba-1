@@ -12,6 +12,18 @@ class RolUsuario(Base):
     id_rol = Column(Integer, primary_key=True)
     nombre_rol = Column(String(50))
 
+class Usuario(Base):
+    __tablename__ = "usuarios"
+    id_usuario = Column(Integer, primary_key=True, index=True)
+    nombre_usuario = Column(String(100))
+    apellido_usuario = Column(String(100))
+    id_tipo_documento_u = Column(Integer, ForeignKey("tipos_documento.id_tipo_documento"))
+    documento_usuario = Column(BigInteger, unique=True)
+    telefono_usuario = Column(BigInteger)
+    correo_usuario = Column(String(100), unique=True)
+    contraseña_usuario = Column(String(100))
+    id_rol_u = Column(Integer, ForeignKey("roles_usuario.id_rol"))
+
 class Cliente(Base):
     __tablename__ = "clientes"
     id_cliente = Column(Integer, primary_key=True, index=True)
@@ -26,18 +38,7 @@ class Cliente(Base):
     is_active = Column(Boolean, default=False)
     verification_token = Column(String(100), unique=True, nullable=True)
 
-class Usuario(Base):
-    __tablename__ = "usuarios"
-    id_usuario = Column(Integer, primary_key=True, index=True)
-    nombre_usuario = Column(String(100))
-    apellido_usuario = Column(String(100))
-    id_tipo_documento_u = Column(Integer, ForeignKey("tipos_documento.id_tipo_documento"))
-    documento_usuario = Column(BigInteger, unique=True)
-    telefono_usuario = Column(BigInteger)
-    correo_usuario = Column(String(100), unique=True)
-    contraseña_usuario = Column(String(100))
-    id_rol_u = Column(Integer, ForeignKey("roles_usuario.id_rol"))
-
+    
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
     id = Column(Integer, primary_key=True, index=True)

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
-import NavbarLanding from '@components/layout/NavbarLanding';
+import Navbar from '@components/layout/Navbar';
 import Footer from '@components/layout/Footer';
 import '../../styles/login.css';
 import fondoImg from '../../assets/images/Fondo2.png';
@@ -18,14 +18,22 @@ const Login = () => {
     setError('');
     try {
       await login(email, password);
+      // Obtener el usuario del localStorage (guardado por AuthContext)
       const userStr = localStorage.getItem('user');
       if (userStr) {
         const user = JSON.parse(userStr);
         const rol = user.rol;
-        if (rol === 'administrador') navigate('/admin');
-        else if (rol === 'cliente') navigate('/cliente');
-        else if (rol?.includes('tecnico')) navigate('/tecnico');
-        else navigate('/');
+        console.log('Rol del usuario:', rol); // Para depuración
+        // Redirigir según el rol
+        if (rol === 'administrador') {
+          navigate('/admin');
+        } else if (rol === 'cliente') {
+          navigate('/cliente');
+        } else if (rol === 'tecnico') {
+          navigate('/tecnico');
+        } else {
+          navigate('/'); // fallback
+        }
       } else {
         navigate('/');
       }
@@ -36,11 +44,8 @@ const Login = () => {
 
   return (
     <>
-      <NavbarLanding />
-      <div 
-        className="login-container" 
-        style={{ backgroundImage: `url(${fondoImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-      >
+      <Navbar />
+      <div className="login-container" style={{ backgroundImage: `url(${fondoImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <form onSubmit={handleSubmit} className="login-form">
           <h2>Iniciar sesión</h2>
           {error && <div className="error">{error}</div>}

@@ -1,0 +1,193 @@
+/* ===== DASHBOARD TÉCNICO ===== */
+.technician-container {
+    position: relative;
+    padding: 30px;
+    min-height: 70vh;
+    background-size: 120%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.technician-container .fondo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.technician-container h1 {
+    margin-bottom: 20px;
+    color: white;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    width: 30%;
+    min-width: 250px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.card h2 {
+    background: #c9a24c;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.item {
+    background: #c9a24c;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item.empty {
+    opacity: 0.7;
+}
+
+.btn-arrow {
+    background: black;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-arrow:hover {
+    background: white;
+    color: black;
+}
+
+.loading-message, .empty-message {
+    text-align: center;
+    color: white;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: #1e1e1e;
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid #c9a24c;
+    width: 90%;
+    max-width: 500px;
+    color: white;
+    position: relative;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    text-align: center;
+    color: #c9a24c;
+}
+
+.modal-content p {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-estado {
+    background: #c9a24c;
+    color: black;
+}
+
+.btn-estado.cancelar {
+    background: #a33;
+    color: white;
+}
+
+.btn-cerrar {
+    background: #555;
+    color: white;
+}
+
+.modal-buttons button:hover {
+    opacity: 0.8;
+}
+
+/* Ajustes del footer (imagen más pequeña y responsive) */
+footer .footer-img img {
+    width: 250px;
+    max-width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+    .card {
+        width: 90%;
+        min-width: auto;
+    }
+    .technician-container {
+        padding: 15px;
+    }
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+}

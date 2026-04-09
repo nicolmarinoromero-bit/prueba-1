@@ -16,12 +16,14 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          {/* Rutas públicas (sin autenticación) */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify-code" element={<VerifyCode />} />
 
+          {/* Rutas protegidas según rol */}
           <Route
             path="/cliente/*"
             element={<PrivateRoute allowedRoles={['cliente']} element={<ClientDashboard />} />}
@@ -32,19 +34,9 @@ function App() {
           />
           <Route
             path="/tecnico/*"
-            element={
-              <PrivateRoute
-                allowedRoles={[
-                  'tecnico de instalador',
-                  'tecnico de soporte',
-                  'analista qa',
-                  'desarrollador backend',
-                  'coordinador de proyectos'
-                ]}
-                element={<TechnicianDashboard />}
-              />
-            }
+            element={<PrivateRoute allowedRoles={['tecnico']} element={<TechnicianDashboard />} />}
           />
+          {/* Ruta protegida para cualquier usuario autenticado (cambiar contraseña) */}
           <Route
             path="/cambiar-password"
             element={<PrivateRoute element={<ChangePassword />} />}
