@@ -18,8 +18,13 @@ class RegisterClienteRequest(BaseModel):
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
+class VerifyCodeRequest(BaseModel):
+    email: EmailStr
+    code: str
+
 class ResetPasswordRequest(BaseModel):
-    token: str
+    email: EmailStr
+    code: str
     new_password: str = Field(..., min_length=6)
 
 class TokenResponse(BaseModel):

@@ -1,67 +1,68 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-import secrets
+import random
+import string
 from ..database import get_db
 from ..models import Cliente, Usuario, PasswordResetToken, RolUsuario
-from ..schemas import LoginRequest, RegisterClienteRequest, ForgotPasswordRequest, ResetPasswordRequest, TokenResponse
+from ..schemas import LoginRequest, RegisterClienteRequest, ForgotPasswordRequest, VerifyCodeRequest, ResetPasswordRequest, TokenResponse
 from ..auth import verify_password, get_password_hash, create_access_token
-from ..email_utils import send_reset_email
+from ..email_utils import send_reset_code_email
 from ..config import settings
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
 
 @router.post("/login", response_model=TokenResponse)
 def login(request: LoginRequest, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(Cliente.CORREO_CLIENTE == request.correo).first()
-    if cliente and verify_password(request.contraseña, cliente.CONTRASEÑA_CLIENTE):
+    cliente = db.query(Cliente).filter(Cliente.correo_cliente == request.correo).first()
+    if cliente and verify_password(request.contraseña, cliente.contraseña_cliente):
         token = create_access_token({
-            "sub": cliente.CORREO_CLIENTE,
+            "sub": cliente.correo_cliente,
             "tipo": "cliente",
-            "id": cliente.ID_CLIENTE
+            "id": cliente.id_cliente
         })
         return TokenResponse(
             access_token=token,
             token_type="bearer",
             rol="cliente",
-            nombre=f"{cliente.NOMBRE_CLIENTE} {cliente.APELLIDO_CLIENTE}"
+            nombre=f"{cliente.nombre_cliente} {cliente.apellido_cliente}"
         )
     
-    usuario = db.query(Usuario).filter(Usuario.CORREO_USUARIO == request.correo).first()
-    if usuario and verify_password(request.contraseña, usuario.CONTRASEÑA_USUARIO):
-        rol = db.query(RolUsuario).filter(RolUsuario.ID_ROL == usuario.ID_ROL_U).first()
+    usuario = db.query(Usuario).filter(Usuario.correo_usuario == request.correo).first()
+    if usuario and verify_password(request.contraseña, usuario.contraseña_usuario):
+        rol = db.query(RolUsuario).filter(RolUsuario.id_rol == usuario.id_rol_u).first()
         token = create_access_token({
-            "sub": usuario.CORREO_USUARIO,
+            "sub": usuario.correo_usuario,
             "tipo": "usuario",
-            "id": usuario.ID_USUARIO,
-            "rol_id": usuario.ID_ROL_U
+            "id": usuario.id_usuario,
+            "rol_id": usuario.id_rol_u
         })
         return TokenResponse(
             access_token=token,
             token_type="bearer",
-            rol=rol.NOMBRE_ROL if rol else "usuario",
-            nombre=f"{usuario.NOMBRE_USUARIO} {usuario.APELLIDO_USUARIO}"
+            rol=rol.nombre_rol if rol else "usuario",
+            nombre=f"{usuario.nombre_usuario} {usuario.apellido_usuario}"
         )
     
     raise HTTPException(status_code=401, detail="Credenciales inválidas")
 
 @router.post("/register/cliente", status_code=status.HTTP_201_CREATED)
 def register_cliente(request: RegisterClienteRequest, db: Session = Depends(get_db)):
-    if db.query(Cliente).filter(Cliente.CORREO_CLIENTE == request.correo).first():
+    if db.query(Cliente).filter(Cliente.correo_cliente == request.correo).first():
         raise HTTPException(status_code=400, detail="El correo ya está registrado")
-    if db.query(Cliente).filter(Cliente.DOCUMENTO_CLIENTE == request.documento).first():
+    if db.query(Cliente).filter(Cliente.documento_cliente == request.documento).first():
         raise HTTPException(status_code=400, detail="El documento ya está registrado")
     
     hashed = get_password_hash(request.contraseña)
     nuevo = Cliente(
-        NOMBRE_CLIENTE=request.nombre.upper(),
-        APELLIDO_CLIENTE=request.apellido.upper(),
-        ID_TIPO_DOCUMENTO_C=request.tipo_documento,
-        DOCUMENTO_CLIENTE=request.documento,
-        TELEFONO_CLIENTE=request.telefono,
-        CORREO_CLIENTE=request.correo.lower(),
-        DIRECCION_CLIENTE=request.direccion,
-        CONTRASEÑA_CLIENTE=hashed,
+        nombre_cliente=request.nombre.upper(),
+        apellido_cliente=request.apellido.upper(),
+        id_tipo_documento_c=request.tipo_documento,
+        documento_cliente=request.documento,
+        telefono_cliente=request.telefono,
+        correo_cliente=request.correo.lower(),
+        direccion_cliente=request.direccion,
+        contraseña_cliente=hashed,
         is_active=True
     )
     db.add(nuevo)
@@ -71,14 +72,14 @@ def register_cliente(request: RegisterClienteRequest, db: Session = Depends(get_
 @router.post("/forgot-password")
 async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
     email = request.email
-    cliente = db.query(Cliente).filter(Cliente.CORREO_CLIENTE == email).first()
-    usuario = db.query(Usuario).filter(Usuario.CORREO_USUARIO == email).first()
+    cliente = db.query(Cliente).filter(Cliente.correo_cliente == email).first()
+    usuario = db.query(Usuario).filter(Usuario.correo_usuario == email).first()
     
     if not cliente and not usuario:
-        return {"message": "Si el correo está registrado, recibirás un enlace de recuperación"}
+        return {"message": "Si el correo está registrado, recibirás un código de verificación."}
     
-    token = secrets.token_urlsafe(32)
-    expires_at = datetime.utcnow() + timedelta(hours=1)
+    code = ''.join(random.choices(string.digits, k=6))
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
     
     existing = db.query(PasswordResetToken).filter(
         ((PasswordResetToken.email_usuario == email) | (PasswordResetToken.email_cliente == email)),
@@ -86,45 +87,58 @@ async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(
     ).first()
     
     if existing:
-        existing.token = token
+        existing.code = code
         existing.created_at = datetime.utcnow()
         existing.expires_at = expires_at
+        existing.token = None
         existing.used = False
-        existing.code = None
     else:
         new_token = PasswordResetToken(
             email_usuario=email if usuario else None,
             email_cliente=email if cliente else None,
-            token=token,
+            code=code,
             expires_at=expires_at
         )
         db.add(new_token)
     
     db.commit()
-    
-    reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
-    await send_reset_email(email, reset_link)
-    return {"message": "Correo de recuperación enviado"}
+    await send_reset_code_email(email, code)
+    return {"message": "Se ha enviado un código de verificación a tu correo."}
 
-@router.post("/reset-password")
-def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+@router.post("/verify-code")
+def verify_code(request: VerifyCodeRequest, db: Session = Depends(get_db)):
     token_entry = db.query(PasswordResetToken).filter(
-        PasswordResetToken.token == request.token,
+        ((PasswordResetToken.email_usuario == request.email) | (PasswordResetToken.email_cliente == request.email)),
+        PasswordResetToken.code == request.code,
         PasswordResetToken.used == False,
         PasswordResetToken.expires_at > datetime.utcnow()
     ).first()
     
     if not token_entry:
-        raise HTTPException(status_code=400, detail="Token inválido o expirado")
+        raise HTTPException(status_code=400, detail="Código inválido o expirado")
+    
+    return {"message": "Código verificado correctamente"}
+
+@router.post("/reset-password")
+def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+    token_entry = db.query(PasswordResetToken).filter(
+        ((PasswordResetToken.email_usuario == request.email) | (PasswordResetToken.email_cliente == request.email)),
+        PasswordResetToken.code == request.code,
+        PasswordResetToken.used == False,
+        PasswordResetToken.expires_at > datetime.utcnow()
+    ).first()
+    
+    if not token_entry:
+        raise HTTPException(status_code=400, detail="Código inválido o expirado")
     
     if token_entry.email_cliente:
-        cliente = db.query(Cliente).filter(Cliente.CORREO_CLIENTE == token_entry.email_cliente).first()
+        cliente = db.query(Cliente).filter(Cliente.correo_cliente == token_entry.email_cliente).first()
         if cliente:
-            cliente.CONTRASEÑA_CLIENTE = get_password_hash(request.new_password)
+            cliente.contraseña_cliente = get_password_hash(request.new_password)
     elif token_entry.email_usuario:
-        usuario = db.query(Usuario).filter(Usuario.CORREO_USUARIO == token_entry.email_usuario).first()
+        usuario = db.query(Usuario).filter(Usuario.correo_usuario == token_entry.email_usuario).first()
         if usuario:
-            usuario.CONTRASEÑA_USUARIO = get_password_hash(request.new_password)
+            usuario.contraseña_usuario = get_password_hash(request.new_password)
     else:
         raise HTTPException(status_code=400, detail="Usuario no encontrado")
     
