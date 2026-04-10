@@ -13,13 +13,12 @@ const NavbarLanding = () => {
         </div>
         <nav>
           <a href="#">Productos</a>
-          <a href="#">Técnicos</a>
+          <Link to="/sobre">Sobre nosotros</Link>
           <a href="#" className="help-link">
             Ayuda <img src={helpIcon} alt="ayuda" />
           </a>
         </nav>
         <div className="nav-right">
-          <Link to="/sobre">Sobre nosotros</Link>
           <Link to="/register">Registrarse</Link>
           <Link to="/login">Iniciar sesión</Link>
         </div>

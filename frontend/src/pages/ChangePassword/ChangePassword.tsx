@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '@contexts/AuthContext';
 import api from '@services/api';
-import Navbar from '@components/layout/Navbar';
+import Navbar from '@components/layout/NavbarLanding';
 import Footer from '@components/layout/Footer';
 
 const ChangePassword = () => {

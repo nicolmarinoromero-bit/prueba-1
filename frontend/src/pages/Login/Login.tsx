@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
-import Navbar from '@components/layout/Navbar';
+import Navbar from '@components/layout/NavbarLanding';
 import Footer from '@components/layout/Footer';
 import '../../styles/login.css';
 import fondoImg from '../../assets/images/Fondo2.png';
@@ -10,35 +10,37 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       await login(email, password);
-      // Obtener el usuario del localStorage (guardado por AuthContext)
       const userStr = localStorage.getItem('user');
       if (userStr) {
         const user = JSON.parse(userStr);
         const rol = user.rol;
-        console.log('Rol del usuario:', rol); // Para depuración
-        // Redirigir según el rol
+        console.log('Rol del usuario:', rol);
         if (rol === 'administrador') {
-          navigate('/admin');
+          navigate('/admin', { replace: true });
         } else if (rol === 'cliente') {
-          navigate('/cliente');
+          navigate('/cliente', { replace: true });
         } else if (rol === 'tecnico') {
-          navigate('/tecnico');
+          navigate('/tecnico', { replace: true });
         } else {
-          navigate('/'); // fallback
+          navigate('/', { replace: true });
         }
       } else {
-        navigate('/');
+        navigate('/', { replace: true });
       }
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,6 +57,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
           <input
             type="password"
@@ -62,8 +65,11 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
-          <button type="submit">Ingresar</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Ingresando...' : 'Ingresar'}
+          </button>
           <div className="links">
             <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
             <Link to="/register">Registrarse</Link>
